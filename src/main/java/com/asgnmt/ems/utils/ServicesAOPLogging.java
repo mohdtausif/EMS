@@ -20,12 +20,12 @@ public class ServicesAOPLogging {
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
         String className = methodSignature.getDeclaringType().getSimpleName();
         String methodName = methodSignature.getName();
-        log.debug(className+":: executi of method "+methodName+" START"); 
+        log.debug(className+":: execution of method "+methodName+" START"); 
         final StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Object result = proceedingJoinPoint.proceed();
         stopWatch.stop();
-        log.debug(className+":: executi of method "+methodName+" END, Execution Time :: " + stopWatch.getTotalTimeMillis() + " ms");
+        log.debug(className+":: execution of method "+methodName+" END, Execution Time :: " + stopWatch.getTotalTimeMillis() + " ms");
         return result;
     }
 }
