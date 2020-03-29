@@ -79,7 +79,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public ApiResponse<Page<DepartmentDto>> getDepartments(String queryText,int offset, int index) throws EmsException {
 		Pageable pageable = PageRequest.of(index, offset);
 		Page<DepartmentEntity> pages = null;
-		if (queryText != null && queryText.trim().length() > 0) {
+		if (queryText != null && !queryText.trim().equals("null") && queryText.trim().length() > 0) {
 			pages = departmentRepository.findByStatusAndTitleContainingIgnoreCase(StatusType.ACTIVE, queryText, pageable);
 		} else {
 			pages = departmentRepository.findByStatus(StatusType.ACTIVE, pageable);

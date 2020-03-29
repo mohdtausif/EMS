@@ -102,7 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ApiResponse<Page<EmployeeDto>> getEmployees(String queryText, int offset, int index) throws EmsException {
 		Pageable pageable = PageRequest.of(index, offset);
 		Page<EmployeeEntity> pages = null;
-		if (queryText != null && queryText.trim().length() > 0) {
+		if (queryText != null && !queryText.trim().equals("null") && queryText.trim().length() > 0) {
 			pages = employeeRepository.findByStatusAndNameContainingIgnoreCaseOrEmpIdContainingIgnoreCase(StatusType.ACTIVE, queryText,queryText, pageable);
 		} else {
 			pages = employeeRepository.findByStatus(StatusType.ACTIVE, pageable);

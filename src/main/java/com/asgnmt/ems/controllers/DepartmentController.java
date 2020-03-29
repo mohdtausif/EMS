@@ -14,27 +14,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.asgnmt.ems.constants.Constants;
 import com.asgnmt.ems.dto.ApiResponse;
 import com.asgnmt.ems.dto.DepartmentDto;
 import com.asgnmt.ems.exceptions.DepartmentNotFoundException;
 import com.asgnmt.ems.exceptions.EmsException;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(Constants.API_VERSION)
 public interface DepartmentController {
-	@PostMapping("/departments")
+	@PostMapping(Constants.URL_SAVE_DEPARTMENT)
 	public ApiResponse<DepartmentDto> saveDepartment(@Valid @RequestBody DepartmentDto departmentDto)
 			throws EmsException, DepartmentNotFoundException;
 
-	@GetMapping("/departments/{id}")
+	@GetMapping(Constants.URL_GET_DEPARTMENT)
 	public ApiResponse<DepartmentDto> getDepartment(@PathVariable("id") String id)
 			throws EmsException, DepartmentNotFoundException;
 
-	@GetMapping("/departments/{offset}/{index}")
+	@GetMapping(Constants.URL_GET_DEPARTMENTS)
 	public ApiResponse<Page<DepartmentDto>> getDepartments(@RequestParam("queryText") String queryText,
 			@PathVariable("offset") int offset, @PathVariable("index") int index) throws EmsException;
 
-	@DeleteMapping("/departments/{id}")
+	@DeleteMapping(Constants.URL_DELETE_DEPARTMENT)
 	public ApiResponse<DepartmentDto> deleteDepartment(@PathVariable("id") String id)
 			throws EmsException, DepartmentNotFoundException;
 }
