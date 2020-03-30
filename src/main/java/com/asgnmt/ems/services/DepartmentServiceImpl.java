@@ -19,6 +19,7 @@ import com.asgnmt.ems.jpa.entity.StatusType;
 import com.asgnmt.ems.jpa.repository.DepartmentRepository;
 import com.asgnmt.ems.jpa.repository.EmployeeRepository;
 import com.asgnmt.ems.utils.DtoConverter;
+import com.asgnmt.ems.utils.LogUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,14 +41,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 			throws EmsException, DepartmentNotFoundException {
 		DepartmentEntity departmentEntity = null;
 		if (departmentDto.getId() != null) {
-			log.debug("Updating existing department with id=" + departmentDto.getId());
+			LogUtils.debug(log, "Updating existing department with id=" + departmentDto.getId());
 			Optional<DepartmentEntity> optionalDepartmentEntity = departmentRepository.findById(departmentDto.getId());
 			if (!optionalDepartmentEntity.isPresent()) {
 				throw new DepartmentNotFoundException("Department not found with Id=" + departmentDto.getId());
 			}
 			departmentEntity = optionalDepartmentEntity.get();
 		} else {
-			log.debug("Inserting a new department with title=" + departmentDto.getTitle());
+			LogUtils.debug(log, "Inserting a new department with title=" + departmentDto.getTitle());
 			departmentEntity = new DepartmentEntity();
 		}
 		departmentEntity.setTitle(departmentDto.getTitle());
@@ -80,18 +81,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 		Pageable pageable = PageRequest.of(index, offset);
 		Page<DepartmentEntity> pages = null;
 		if (queryText != null && !queryText.trim().equals("null") && queryText.trim().length() > 0) {
+			LogUtils.debug(log, "Fetching departments with queryText="+queryText);
 			pages = departmentRepository.findByStatusAndTitleContainingIgnoreCase(StatusType.ACTIVE, queryText, pageable);
 		} else {
+			LogUtils.debug(log, "Fetching departments without queryText");
 			pages = departmentRepository.findByStatus(StatusType.ACTIVE, pageable);
 		}
 		
 		if (pages != null) {
+			LogUtils.debug(log, "Converted entity list size="+pages.getSize());
 			Page<DepartmentDto> dtoPage = pages.map(new Function<DepartmentEntity, DepartmentDto>() {
 			    @Override
 			    public DepartmentDto apply(DepartmentEntity entity) {
 			    	return dtoConverter.getDepartmentDto(entity);
 			    }
 			});
+			LogUtils.debug(log, "Converted dto list size="+dtoPage.getSize());
 			ApiResponse<Page<DepartmentDto>> apiResponse = new ApiResponse<>();
 			apiResponse.setData(dtoPage);
 			return apiResponse;

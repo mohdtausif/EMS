@@ -20,6 +20,7 @@ import com.asgnmt.ems.jpa.entity.StatusType;
 import com.asgnmt.ems.jpa.repository.DepartmentRepository;
 import com.asgnmt.ems.jpa.repository.EmployeeRepository;
 import com.asgnmt.ems.utils.DtoConverter;
+import com.asgnmt.ems.utils.LogUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Optional<DepartmentEntity> optionalDepartmentEntity=null;
 		if(employeeDto.getDepartmentId()!=null && employeeDto.getDepartmentId().trim().length()>0)
 		{
+			LogUtils.debug(log, "Fetching employee's department with id="+employeeDto.getDepartmentId());
 			optionalDepartmentEntity=departmentRepository.findById(employeeDto.getDepartmentId());
 			if(!optionalDepartmentEntity.isPresent())
 			{
@@ -58,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		EmployeeEntity employeeEntity=null;
 		if(employeeDto.getId()!=null && employeeDto.getId().trim().length()>0)
 		{
-			log.debug("Updating employee with id="+employeeDto.getId());
+			LogUtils.debug(log, "Updating employee with id="+employeeDto.getId());
 			Optional<EmployeeEntity> optionalEmployeeEntity=employeeRepository.findById(employeeDto.getId());
 			if(!optionalEmployeeEntity.isPresent())
 			{
@@ -68,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		else
 		{
-			log.debug("Adding new employee with name="+employeeDto.getName());
+			LogUtils.debug(log, "Adding new employee with name="+employeeDto.getName());
 			employeeEntity=new EmployeeEntity();
 		}
 		employeeEntity.setName(employeeDto.getName());
@@ -79,6 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employeeEntity=employeeRepository.save(employeeEntity);
 		if(employeeEntity!=null)
 		{
+			LogUtils.debug(log, "Saved employee id="+employeeEntity.getId());
 			ApiResponse<EmployeeDto> apiResponse=new ApiResponse<>();
 			apiResponse.setData(dtoConverter.getEmployeeDto(employeeEntity));
 			return apiResponse;
@@ -103,18 +106,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Pageable pageable = PageRequest.of(index, offset);
 		Page<EmployeeEntity> pages = null;
 		if (queryText != null && !queryText.trim().equals("null") && queryText.trim().length() > 0) {
+			LogUtils.debug(log, "Fetching employees with queryText="+queryText);
 			pages = employeeRepository.findByStatusAndNameContainingIgnoreCaseOrEmpIdContainingIgnoreCase(StatusType.ACTIVE, queryText,queryText, pageable);
 		} else {
+			LogUtils.debug(log, "Fetching employees without queryText");
 			pages = employeeRepository.findByStatus(StatusType.ACTIVE, pageable);
 		}
 		
 		if (pages != null) {
+			LogUtils.debug(log, "Fetched entity size="+pages.getSize());
 			Page<EmployeeDto> dtoPage = pages.map(new Function<EmployeeEntity, EmployeeDto>() {
 			    @Override
 			    public EmployeeDto apply(EmployeeEntity entity) {
 			    	return dtoConverter.getEmployeeDto(entity);
 			    }
 			});
+			LogUtils.debug(log, "Converted DTO page size="+dtoPage.getSize());
 			ApiResponse<Page<EmployeeDto>> apiResponse = new ApiResponse<>();
 			apiResponse.setData(dtoPage);
 			return apiResponse;

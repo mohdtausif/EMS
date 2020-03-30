@@ -20,8 +20,4 @@ public interface DepartmentService {
 	ApiResponse<Page<DepartmentDto>> getDepartments(String queryText,int offset, int index) throws EmsException;
 
 	ApiResponse<DepartmentDto> deleteDepartment(String id)throws EmsException, DepartmentNotFoundException;
-	
-	
-	
-
 }

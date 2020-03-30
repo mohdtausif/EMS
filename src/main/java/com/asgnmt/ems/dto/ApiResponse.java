@@ -23,4 +23,11 @@ public class ApiResponse<T> {
 		this.success=true;
 		this.errorCode=0;
 	}
+	@Override
+	public String toString() {
+		return "ApiResponse [message=" + message + ", success=" + success + ", errorCode=" + errorCode + ", data="
+				+ data + "]";
+	}
+	
+	
 }
