@@ -1,4 +1,4 @@
-package com.asgnmt.ems.integration;
+package com.asgnmt.ems.it;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,7 +46,7 @@ import com.mysql.cj.util.TestUtils;
 		WebConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
 @Transactional
 @ActiveProfiles("test")
-public class EmployeeITController {
+public class EmployeeControllerIT {
 	private MockMvc mockMvc;
 
 	@Autowired

@@ -2,6 +2,7 @@ package com.asgnmt.ems;
 
 import org.springframework.stereotype.Component;
 
+import com.asgnmt.ems.dto.DepartmentDto;
 import com.asgnmt.ems.dto.EmployeeDto;
 import com.asgnmt.ems.jpa.entity.DepartmentEntity;
 import com.asgnmt.ems.jpa.entity.EmployeeEntity;
@@ -17,6 +18,14 @@ public class TestHelper {
 		employeeDto.setEmailId("emailId" + random + "@company.com");
 		employeeDto.setDepartmentId(departmentId);
 		return employeeDto;
+	}
+	
+	public DepartmentDto getDepartmentDto(String id, String random) {
+		DepartmentDto departmentDto = new DepartmentDto();
+		if(id!=null)
+			departmentDto.setId(id);
+		departmentDto.setTitle("title"+random);
+		return departmentDto;
 	}
 
 	public EmployeeEntity getEmployeeEntity(DepartmentEntity departmentEntity,String random) {
